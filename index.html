@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RBMOTORS — Job Cards</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#e8f2fa;
+  --surface:#ffffff;
+  --surface-raised:#f3f9fd;
+  --line:#c3dbe9;
+  --amber:#2f7fb8;
+  --steel:#5f8aa3;
+  --text:#152c3a;
+  --text-muted:#5c7c8f;
+  --danger:#c1503d;
+  --success:#2f8f6d;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;}
+body{
+  background-image:
+    radial-gradient(circle, rgba(21,44,58,0.06) 1px, transparent 1px);
+  background-size:22px 22px;
+  min-height:100vh;
+  padding:28px 20px 80px;
+}
+h1,h2,h3,.display{font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:0.03em;}
+
+/* ---------- Header ---------- */
+.topbar{
+  max-width:1180px; margin:0 auto 26px; display:flex; align-items:flex-end;
+  justify-content:space-between; flex-wrap:wrap; gap:16px;
+  border-bottom:3px solid var(--amber); padding-bottom:16px;
+}
+.brand .wordmark{font-size:clamp(28px,4vw,40px); font-weight:700; margin:0; line-height:1;}
+.brand .wordmark span{color:var(--amber);}
+.brand .tagline{color:var(--text-muted); font-size:12px; letter-spacing:0.18em; margin-top:4px; text-transform:uppercase;}
+.newBtn{
+  background:var(--amber); color:#ffffff; border:none; font-family:'Oswald',sans-serif;
+  font-weight:700; text-transform:uppercase; letter-spacing:0.04em; font-size:14px;
+  padding:13px 20px; cursor:pointer; border-radius:2px;
+}
+.newBtn:hover{background:#f7b85a;}
+
+/* ---------- Filters ---------- */
+.controls{max-width:1180px; margin:0 auto 22px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+.tab{
+  background:none; border:1px solid var(--line); color:var(--text-muted); font-family:'IBM Plex Mono';
+  font-size:12px; letter-spacing:0.08em; text-transform:uppercase; padding:8px 14px; cursor:pointer; border-radius:20px;
+}
+.tab.active{border-color:var(--amber); color:var(--amber);}
+.search{
+  margin-left:auto; background:var(--surface); border:1px solid var(--line); color:var(--text);
+  padding:9px 14px; font-family:'IBM Plex Mono'; font-size:13px; border-radius:20px; min-width:220px;
+}
+.search::placeholder{color:var(--text-muted);}
+
+/* ---------- Form panel ---------- */
+.formPanel{max-width:1180px; margin:0 auto 30px; background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:26px; display:none;}
+.formPanel.open{display:block;}
+.formPanel h2{font-size:20px; margin:0 0 18px; color:var(--amber);}
+.fRow{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-bottom:14px;}
+.field label{display:block; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); margin-bottom:5px;}
+.field input, .field select, .field textarea{
+  width:100%; background:var(--bg); border:1px solid var(--line); color:var(--text);
+  padding:9px 10px; font-family:'IBM Plex Mono'; font-size:13px; border-radius:3px;
+}
+.field textarea{resize:vertical; min-height:50px;}
+fieldset{border:1px solid var(--line); border-radius:5px; padding:16px; margin:0 0 16px;}
+legend{font-family:'Oswald'; text-transform:uppercase; letter-spacing:0.06em; color:var(--steel); font-size:13px; padding:0 8px;}
+.lineRow{display:grid; grid-template-columns:2fr 1fr 1fr auto; gap:8px; margin-bottom:8px; align-items:center;}
+.lineRow.services{grid-template-columns:1.5fr 1.5fr auto;}
+.lineRow input{background:var(--bg); border:1px solid var(--line); color:var(--text); padding:8px; font-family:'IBM Plex Mono'; font-size:13px; border-radius:3px;}
+.rmBtn{background:none; border:1px solid var(--danger); color:var(--danger); border-radius:3px; cursor:pointer; padding:8px 10px; font-size:13px;}
+.addBtn{background:none; border:1px dashed var(--steel); color:var(--steel); border-radius:3px; cursor:pointer; padding:8px 12px; font-size:12px; letter-spacing:0.05em; text-transform:uppercase;}
+.totalsBox{display:flex; justify-content:flex-end; gap:22px; flex-wrap:wrap; margin:16px 0; padding-top:14px; border-top:1px solid var(--line);}
+.totalsBox div{font-size:13px; color:var(--text-muted);}
+.totalsBox strong{color:var(--text); font-size:15px;}
+.grandTotal{color:var(--amber) !important; font-size:18px !important;}
+.formActions{display:flex; gap:10px; justify-content:flex-end; margin-top:10px;}
+.saveBtn{background:var(--amber); color:#ffffff; border:none; font-family:'Oswald'; font-weight:700; text-transform:uppercase; padding:12px 22px; cursor:pointer; border-radius:3px;}
+.cancelBtn{background:none; border:1px solid var(--line); color:var(--text-muted); font-family:'Oswald'; text-transform:uppercase; padding:12px 22px; cursor:pointer; border-radius:3px;}
+
+/* ---------- Ticket grid ---------- */
+.grid{max-width:1180px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:26px;}
+.empty{max-width:1180px; margin:60px auto; text-align:center; color:var(--text-muted);}
+.empty .display{font-size:22px; color:var(--text); margin-bottom:8px;}
+
+.ticket{
+  position:relative; background:var(--surface-raised); border:1px solid var(--line); border-radius:8px;
+  padding:22px 18px 18px; cursor:pointer; transition:transform .15s ease, border-color .15s ease;
+}
+.ticket:hover{transform:translateY(-3px); border-color:var(--amber);}
+.ticket::before{
+  content:""; position:absolute; top:-9px; left:24px; width:18px; height:18px; border-radius:50%;
+  background:var(--bg); border:1px solid var(--line);
+}
+.ticket .jobNo{color:var(--text-muted); font-size:11px; letter-spacing:0.08em;}
+.ticket .regNo{font-family:'Oswald'; font-size:22px; font-weight:700; margin:4px 0 2px; letter-spacing:0.03em;}
+.ticket .veh{color:var(--text-muted); font-size:12.5px; margin-bottom:12px;}
+.ticket .cust{font-size:13px; margin-bottom:2px;}
+.ticket .phone{font-size:12px; color:var(--text-muted); margin-bottom:14px;}
+.ticket .amt{font-family:'Oswald'; font-size:19px; color:var(--amber);}
+.stamp{
+  position:absolute; top:16px; right:14px; font-family:'Oswald'; font-weight:700; font-size:11px;
+  letter-spacing:0.1em; padding:4px 9px; border:2px solid; border-radius:3px; transform:rotate(6deg);
+  text-transform:uppercase;
+}
+.stamp.pending{color:var(--danger); border-color:var(--danger);}
+.stamp.progress{color:var(--amber); border-color:var(--amber);}
+.stamp.ready{color:var(--steel); border-color:var(--steel);}
+.stamp.paid{color:var(--success); border-color:var(--success);}
+
+/* ---------- Detail modal ---------- */
+.overlay{display:none; position:fixed; inset:0; background:rgba(10,9,8,0.75); z-index:50; align-items:flex-start; justify-content:center; padding:40px 16px; overflow-y:auto;}
+.overlay.open{display:flex;}
+.detail{background:var(--surface); border:1px solid var(--line); border-radius:8px; max-width:720px; width:100%; padding:32px;}
+.detail h2{color:var(--amber); font-size:24px; margin:0 0 2px;}
+.detail .sub{color:var(--text-muted); font-size:12px; margin-bottom:20px;}
+.dSection{margin-bottom:18px;}
+.dSection h4{font-family:'Oswald'; font-size:13px; letter-spacing:0.08em; color:var(--steel); text-transform:uppercase; margin:0 0 8px; border-bottom:1px solid var(--line); padding-bottom:6px;}
+.dGrid{display:grid; grid-template-columns:1fr 1fr; gap:6px 20px; font-size:13px;}
+table.dTable{width:100%; border-collapse:collapse; font-size:12.5px;}
+table.dTable th{text-align:left; color:var(--text-muted); font-weight:500; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; padding:6px 4px; border-bottom:1px solid var(--line);}
+table.dTable td{padding:6px 4px; border-bottom:1px solid var(--line);}
+.detailTotals{text-align:right; margin-top:10px;}
+.detailTotals .g{font-family:'Oswald'; font-size:20px; color:var(--amber);}
+.detailActions{display:flex; gap:10px; margin-top:24px; flex-wrap:wrap;}
+.statusSelect{background:var(--bg); border:1px solid var(--line); color:var(--text); padding:10px 12px; font-family:'IBM Plex Mono'; font-size:13px; border-radius:3px;}
+.printBtn{background:var(--steel); color:#ffffff; border:none; font-family:'Oswald'; font-weight:700; text-transform:uppercase; padding:10px 18px; cursor:pointer; border-radius:3px;}
+.delBtn{background:none; border:1px solid var(--danger); color:var(--danger); font-family:'Oswald'; text-transform:uppercase; padding:10px 18px; cursor:pointer; border-radius:3px; margin-left:auto;}
+.closeBtn{background:none; border:1px solid var(--line); color:var(--text-muted); font-family:'Oswald'; text-transform:uppercase; padding:10px 18px; cursor:pointer; border-radius:3px;}
+
+.notice{max-width:1180px; margin:0 auto 20px; font-size:11.5px; color:var(--text-muted); border-left:2px solid var(--steel); padding:8px 12px; background:var(--surface);}
+
+@media print{
+  body *{visibility:hidden;}
+  .overlay, .overlay *{visibility:visible;}
+  .overlay{position:absolute; inset:auto; background:#fff; padding:0;}
+  .detail{color:#111; background:#fff; box-shadow:none; border:none;}
+  .detailActions{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <p class="wordmark">RB<span>MOTORS</span></p>
+    <p class="tagline"><span style="font-size:16px;">Multi Brand Car Care</span> — <span style="font-size:14px;">Job Card Board</span></p>
+    <p class="tagline" style="letter-spacing:0.06em; margin-top:2px;">Ph: 87787 34866 · 90803 52608 · 0431 2444771</p>
+  </div>
+  <button class="newBtn" onclick="openForm()">+ New Job Card</button>
+</div>
+
+<div class="notice">Job cards are shared across everyone using this app — visible to the whole team.</div>
+
+<div class="controls">
+  <button class="tab active" data-status="all" onclick="setFilter('all')">All</button>
+  <button class="tab" data-status="Pending" onclick="setFilter('Pending')">Pending</button>
+  <button class="tab" data-status="In Progress" onclick="setFilter('In Progress')">In Progress</button>
+  <button class="tab" data-status="Ready" onclick="setFilter('Ready')">Ready</button>
+  <button class="tab" data-status="Paid" onclick="setFilter('Paid')">Paid</button>
+  <input class="search" id="searchBox" placeholder="Search reg no. / customer..." oninput="render()">
+</div>
+
+<!-- FORM -->
+<div class="formPanel" id="formPanel">
+  <h2>New Job Card</h2>
+  <form id="jobForm" onsubmit="return saveJob(event)">
+    <fieldset>
+      <legend>Customer</legend>
+      <div class="fRow">
+        <div class="field"><label>Name</label><input required id="custName"></div>
+        <div class="field"><label>Phone</label><input required id="custPhone"></div>
+        <div class="field"><label>Email</label><input id="custEmail"></div>
+        <div class="field"><label>Address</label><input id="custAddress"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Vehicle</legend>
+      <div class="fRow">
+        <div class="field"><label>Make &amp; Model</label><input required id="vehModel"></div>
+        <div class="field"><label>Registration No.</label><input required id="vehReg"></div>
+        <div class="field"><label>Year</label><input id="vehYear"></div>
+        <div class="field"><label>Odometer (km)</label><input id="vehOdo"></div>
+        <div class="field"><label>Fuel Level</label><input id="vehFuel"></div>
+        <div class="field"><label>Color</label><input id="vehColor"></div>
+        <div class="field"><label>Chassis No.</label><input id="vehChassis"></div>
+        <div class="field"><label>Engine No.</label><input id="vehEngine"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Service / Diagnosis</legend>
+      <div id="serviceRows"></div>
+      <button type="button" class="addBtn" onclick="addServiceRow()">+ Add line</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Parts Used</legend>
+      <div id="partRows"></div>
+      <button type="button" class="addBtn" onclick="addPartRow()">+ Add part</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Labor Charges</legend>
+      <div id="laborRows"></div>
+      <button type="button" class="addBtn" onclick="addLaborRow()">+ Add labor</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Payment</legend>
+      <div class="fRow">
+        <div class="field"><label>Tax / GST (₹)</label><input type="number" step="0.01" id="taxAmt" value="0" oninput="updateTotals()"></div>
+        <div class="field"><label>Discount (₹)</label><input type="number" step="0.01" id="discAmt" value="0" oninput="updateTotals()"></div>
+        <div class="field"><label>Payment Mode</label>
+          <select id="payMode"><option>Cash</option><option>Card</option><option>UPI</option><option>Bank Transfer</option></select>
+        </div>
+        <div class="field"><label>Status</label>
+          <select id="payStatus"><option>Pending</option><option>In Progress</option><option>Ready</option><option>Paid</option></select>
+        </div>
+      </div>
+      <div class="totalsBox">
+        <div>Parts: <strong id="tParts">₹0.00</strong></div>
+        <div>Labor: <strong id="tLabor">₹0.00</strong></div>
+        <div>Grand Total: <strong class="grandTotal" id="tGrand">₹0.00</strong></div>
+      </div>
+    </fieldset>
+
+    <div class="field" style="margin-bottom:16px;">
+      <label>Notes / Recommendations</label>
+      <textarea id="notes"></textarea>
+    </div>
+
+    <div class="formActions">
+      <button type="button" class="cancelBtn" onclick="closeForm()">Cancel</button>
+      <button type="submit" class="saveBtn">Save Job Card</button>
+    </div>
+  </form>
+</div>
+
+<div id="gridWrap"></div>
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="overlay" onclick="if(event.target===this) closeDetail()">
+  <div class="detail" id="detailBody"></div>
+</div>
+
+<script>
+let jobs = [];
+let filter = 'all';
+let editingId = null;
+
+async function loadJobs(){
+  try{
+    const res = await window.storage.get('jobcards', true);
+    jobs = res && res.value ? JSON.parse(res.value) : [];
+  }catch(e){ jobs = []; }
+  render();
+}
+
+async function persist(){
+  try{
+    await window.storage.set('jobcards', JSON.stringify(jobs), true);
+  }catch(e){ console.error('storage error', e); }
+}
+
+function fmt(n){ return '₹' + (Number(n)||0).toFixed(2); }
+
+function setFilter(f){
+  filter = f;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.status===f));
+  render();
+}
+
+function render(){
+  const wrap = document.getElementById('gridWrap');
+  const q = document.getElementById('searchBox').value.trim().toLowerCase();
+  let list = jobs.slice().sort((a,b)=> b.createdAt - a.createdAt);
+  if(filter!=='all') list = list.filter(j=>j.status===filter);
+  if(q) list = list.filter(j => (j.vehReg||'').toLowerCase().includes(q) || (j.custName||'').toLowerCase().includes(q));
+
+  if(list.length===0){
+    wrap.innerHTML = '<div class="empty"><p class="display">No job cards here</p><p>Create one with the button above to get started.</p></div>';
+    return;
+  }
+
+  wrap.innerHTML = '<div class="grid">' + list.map(j=>{
+    const stampClass = j.status==='Pending'?'pending':j.status==='In Progress'?'progress':j.status==='Ready'?'ready':'paid';
+    return `<div class="ticket" onclick="openDetail('${j.id}')">
+      <div class="stamp ${stampClass}">${j.status}</div>
+      <div class="jobNo">JOB #${j.id}</div>
+      <div class="regNo">${escapeHtml(j.vehReg||'-')}</div>
+      <div class="veh">${escapeHtml(j.vehModel||'')}</div>
+      <div class="cust">${escapeHtml(j.custName||'')}</div>
+      <div class="phone">${escapeHtml(j.custPhone||'')}</div>
+      <div class="amt">${fmt(j.grandTotal)}</div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---- form dynamic rows ---- */
+function addServiceRow(desc='', diag=''){
+  const div = document.createElement('div');
+  div.className = 'lineRow services';
+  div.innerHTML = `<input placeholder="Service / issue reported" value="${escapeHtml(desc)}">
+    <input placeholder="Diagnosis / remarks" value="${escapeHtml(diag)}">
+    <button type="button" class="rmBtn" onclick="this.parentElement.remove()">✕</button>`;
+  document.getElementById('serviceRows').appendChild(div);
+}
+function addPartRow(desc='', qty='', price=''){
+  const div = document.createElement('div');
+  div.className = 'lineRow';
+  div.innerHTML = `<input placeholder="Part description" value="${escapeHtml(desc)}">
+    <input type="number" placeholder="Qty" value="${qty}" oninput="updateTotals()">
+    <input type="number" placeholder="Unit price" value="${price}" oninput="updateTotals()">
+    <button type="button" class="rmBtn" onclick="this.parentElement.remove(); updateTotals();">✕</button>`;
+  document.getElementById('partRows').appendChild(div);
+}
+function addLaborRow(desc='', hours='', rate=''){
+  const div = document.createElement('div');
+  div.className = 'lineRow';
+  div.innerHTML = `<input placeholder="Work description" value="${escapeHtml(desc)}">
+    <input type="number" placeholder="Hours" value="${hours}" oninput="updateTotals()">
+    <input type="number" placeholder="Rate" value="${rate}" oninput="updateTotals()">
+    <button type="button" class="rmBtn" onclick="this.parentElement.remove(); updateTotals();">✕</button>`;
+  document.getElementById('laborRows').appendChild(div);
+}
+
+function collectRows(containerId, kind){
+  const rows = [...document.getElementById(containerId).children];
+  return rows.map(r=>{
+    const inputs = r.querySelectorAll('input');
+    if(kind==='service') return {desc:inputs[0].value, diag:inputs[1].value};
+    if(kind==='part') return {desc:inputs[0].value, qty:Number(inputs[1].value)||0, price:Number(inputs[2].value)||0};
+    if(kind==='labor') return {desc:inputs[0].value, hours:Number(inputs[1].value)||0, rate:Number(inputs[2].value)||0};
+  }).filter(r=>r.desc && r.desc.trim());
+}
+
+function updateTotals(){
+  const parts = collectRows('partRows','part');
+  const labor = collectRows('laborRows','labor');
+  const partsTotal = parts.reduce((s,p)=> s + p.qty*p.price, 0);
+  const laborTotal = labor.reduce((s,l)=> s + l.hours*l.rate, 0);
+  const tax = Number(document.getElementById('taxAmt').value)||0;
+  const disc = Number(document.getElementById('discAmt').value)||0;
+  const grand = partsTotal + laborTotal + tax - disc;
+  document.getElementById('tParts').textContent = fmt(partsTotal);
+  document.getElementById('tLabor').textContent = fmt(laborTotal);
+  document.getElementById('tGrand').textContent = fmt(grand);
+  return {partsTotal, laborTotal, grand};
+}
+
+function openForm(){
+  editingId = null;
+  document.querySelector('.formPanel h2').textContent = 'New Job Card';
+  document.getElementById('jobForm').reset();
+  document.getElementById('serviceRows').innerHTML='';
+  document.getElementById('partRows').innerHTML='';
+  document.getElementById('laborRows').innerHTML='';
+  addServiceRow(); addPartRow(); addLaborRow();
+  updateTotals();
+  document.getElementById('formPanel').classList.add('open');
+  document.getElementById('formPanel').scrollIntoView({behavior:'smooth'});
+}
+function closeForm(){
+  document.getElementById('formPanel').classList.remove('open');
+}
+
+function editJob(id){
+  const j = jobs.find(x=>x.id===id);
+  if(!j) return;
+  editingId = id;
+  closeDetail();
+
+  document.getElementById('custName').value = j.custName||'';
+  document.getElementById('custPhone').value = j.custPhone||'';
+  document.getElementById('custEmail').value = j.custEmail||'';
+  document.getElementById('custAddress').value = j.custAddress||'';
+  document.getElementById('vehModel').value = j.vehModel||'';
+  document.getElementById('vehReg').value = j.vehReg||'';
+  document.getElementById('vehYear').value = j.vehYear||'';
+  document.getElementById('vehOdo').value = j.vehOdo||'';
+  document.getElementById('vehFuel').value = j.vehFuel||'';
+  document.getElementById('vehColor').value = j.vehColor||'';
+  document.getElementById('vehChassis').value = j.vehChassis||'';
+  document.getElementById('vehEngine').value = j.vehEngine||'';
+  document.getElementById('taxAmt').value = j.tax||0;
+  document.getElementById('discAmt').value = j.discount||0;
+  document.getElementById('payMode').value = j.payMode||'Cash';
+  document.getElementById('payStatus').value = j.status||'Pending';
+  document.getElementById('notes').value = j.notes||'';
+
+  document.getElementById('serviceRows').innerHTML='';
+  document.getElementById('partRows').innerHTML='';
+  document.getElementById('laborRows').innerHTML='';
+  (j.services&&j.services.length ? j.services : [{desc:'',diag:''}]).forEach(s=>addServiceRow(s.desc,s.diag));
+  (j.parts&&j.parts.length ? j.parts : [{desc:'',qty:'',price:''}]).forEach(p=>addPartRow(p.desc,p.qty,p.price));
+  (j.labor&&j.labor.length ? j.labor : [{desc:'',hours:'',rate:''}]).forEach(l=>addLaborRow(l.desc,l.hours,l.rate));
+  updateTotals();
+
+  document.querySelector('.formPanel h2').textContent = 'Edit Job Card #' + j.id;
+  document.getElementById('formPanel').classList.add('open');
+  document.getElementById('formPanel').scrollIntoView({behavior:'smooth'});
+}
+
+async function saveJob(e){
+  e.preventDefault();
+  const totals = updateTotals();
+  const job = {
+    id: editingId || String(Date.now()).slice(-6),
+    createdAt: editingId ? (jobs.find(j=>j.id===editingId)||{}).createdAt || Date.now() : Date.now(),
+    custName: document.getElementById('custName').value,
+    custPhone: document.getElementById('custPhone').value,
+    custEmail: document.getElementById('custEmail').value,
+    custAddress: document.getElementById('custAddress').value,
+    vehModel: document.getElementById('vehModel').value,
+    vehReg: document.getElementById('vehReg').value,
+    vehYear: document.getElementById('vehYear').value,
+    vehOdo: document.getElementById('vehOdo').value,
+    vehFuel: document.getElementById('vehFuel').value,
+    vehColor: document.getElementById('vehColor').value,
+    vehChassis: document.getElementById('vehChassis').value,
+    vehEngine: document.getElementById('vehEngine').value,
+    services: collectRows('serviceRows','service'),
+    parts: collectRows('partRows','part'),
+    labor: collectRows('laborRows','labor'),
+    tax: Number(document.getElementById('taxAmt').value)||0,
+    discount: Number(document.getElementById('discAmt').value)||0,
+    payMode: document.getElementById('payMode').value,
+    status: document.getElementById('payStatus').value,
+    notes: document.getElementById('notes').value,
+    partsTotal: totals.partsTotal,
+    laborTotal: totals.laborTotal,
+    grandTotal: totals.grand
+  };
+
+  if(editingId){
+    jobs = jobs.map(j=> j.id===editingId ? job : j);
+  } else {
+    jobs.push(job);
+  }
+  await persist();
+  closeForm();
+  render();
+  return false;
+}
+
+/* ---- detail view ---- */
+function openDetail(id){
+  const j = jobs.find(x=>x.id===id);
+  if(!j) return;
+  const body = document.getElementById('detailBody');
+  body.innerHTML = `
+    <h2>Job Card #${j.id}</h2>
+    <p class="sub">${new Date(j.createdAt).toLocaleString()} — RBMOTORS Multi Brand Car Care, 109-B Keela Ambigapuram, Trichy - 620004 · Ph: 87787 34866 / 90803 52608 / 0431 2444771</p>
+
+    <div class="dSection"><h4>Customer</h4>
+      <div class="dGrid">
+        <div>Name: ${escapeHtml(j.custName)}</div><div>Phone: ${escapeHtml(j.custPhone)}</div>
+        <div>Email: ${escapeHtml(j.custEmail||'-')}</div><div>Address: ${escapeHtml(j.custAddress||'-')}</div>
+      </div></div>
+
+    <div class="dSection"><h4>Vehicle</h4>
+      <div class="dGrid">
+        <div>Make/Model: ${escapeHtml(j.vehModel)}</div><div>Reg No: ${escapeHtml(j.vehReg)}</div>
+        <div>Year: ${escapeHtml(j.vehYear||'-')}</div><div>Odometer: ${escapeHtml(j.vehOdo||'-')} km</div>
+        <div>Fuel: ${escapeHtml(j.vehFuel||'-')}</div><div>Color: ${escapeHtml(j.vehColor||'-')}</div>
+        <div>Chassis: ${escapeHtml(j.vehChassis||'-')}</div><div>Engine: ${escapeHtml(j.vehEngine||'-')}</div>
+      </div></div>
+
+    ${j.services.length ? `<div class="dSection"><h4>Service / Diagnosis</h4>
+      <table class="dTable"><tr><th>Reported</th><th>Diagnosis</th></tr>
+      ${j.services.map(s=>`<tr><td>${escapeHtml(s.desc)}</td><td>${escapeHtml(s.diag||'-')}</td></tr>`).join('')}
+      </table></div>` : ''}
+
+    ${j.parts.length ? `<div class="dSection"><h4>Parts Used</h4>
+      <table class="dTable"><tr><th>Part</th><th>Qty</th><th>Unit ₹</th><th>Amount</th></tr>
+      ${j.parts.map(p=>`<tr><td>${escapeHtml(p.desc)}</td><td>${p.qty}</td><td>${p.price.toFixed(2)}</td><td>${(p.qty*p.price).toFixed(2)}</td></tr>`).join('')}
+      </table></div>` : ''}
+
+    ${j.labor.length ? `<div class="dSection"><h4>Labor Charges</h4>
+      <table class="dTable"><tr><th>Work</th><th>Hours</th><th>Rate ₹</th><th>Amount</th></tr>
+      ${j.labor.map(l=>`<tr><td>${escapeHtml(l.desc)}</td><td>${l.hours}</td><td>${l.rate.toFixed(2)}</td><td>${(l.hours*l.rate).toFixed(2)}</td></tr>`).join('')}
+      </table></div>` : ''}
+
+    <div class="detailTotals">
+      <div>Parts: ${fmt(j.partsTotal)} &nbsp; Labor: ${fmt(j.laborTotal)} &nbsp; Tax: ${fmt(j.tax)} &nbsp; Discount: −${fmt(j.discount)}</div>
+      <div class="g">Grand Total: ${fmt(j.grandTotal)}</div>
+      <div style="font-size:12px;color:var(--text-muted);">Payment mode: ${escapeHtml(j.payMode)}</div>
+    </div>
+
+    ${j.notes ? `<div class="dSection"><h4>Notes</h4><div style="font-size:13px;">${escapeHtml(j.notes)}</div></div>` : ''}
+
+    <div class="detailActions">
+      <select class="statusSelect" id="statusChanger" onchange="changeStatus('${j.id}', this.value)">
+        ${['Pending','In Progress','Ready','Paid'].map(s=>`<option ${s===j.status?'selected':''}>${s}</option>`).join('')}
+      </select>
+      <button class="printBtn" onclick="window.print()">Print</button>
+      <button class="saveBtn" style="padding:10px 18px;" onclick="editJob('${j.id}')">Edit</button>
+      <button class="closeBtn" onclick="closeDetail()">Close</button>
+      <button class="delBtn" onclick="deleteJob('${j.id}')">Delete</button>
+    </div>
+  `;
+  document.getElementById('overlay').classList.add('open');
+}
+function closeDetail(){
+  document.getElementById('overlay').classList.remove('open');
+}
+async function changeStatus(id, status){
+  jobs = jobs.map(j=> j.id===id ? {...j, status} : j);
+  await persist();
+  render();
+}
+async function deleteJob(id){
+  jobs = jobs.filter(j=>j.id!==id);
+  await persist();
+  closeDetail();
+  render();
+}
+
+loadJobs();
+</script>
+</body>
+</html>
